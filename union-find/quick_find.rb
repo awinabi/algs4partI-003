@@ -6,9 +6,11 @@ class QuickFind
     
   def union(a,b)
     if @qf_ary[a] != @qf_ary[b]
-      @qf_ary.each do |i|
-        if @qf_ary[i] == @qf_ary[a]
-          @qf_ary[i] = @qf_ary[b]
+      a_val = @qf_ary[a]
+      b_val = @qf_ary[b]
+      @qf_ary.each_index do |i|
+        if @qf_ary[i] == a_val
+          @qf_ary[i] = b_val
         end
       end
     end
@@ -33,4 +35,6 @@ qf.print_state()
 qf.union(2,4)
 qf.print_state()
 puts "connected(1,5) => #{qf.is_connected?(1,5)}"
-
+qf.union(1,2)
+qf.print_state()
+puts "connected(2,5) => #{qf.is_connected?(2,5)}"

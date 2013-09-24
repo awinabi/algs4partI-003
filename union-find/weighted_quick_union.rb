@@ -7,7 +7,7 @@ class WeightedQuickUnion
   def union(a,b)
     x = root(a)
     y = root(b)
-    p "x=#{x};y=#{y}"
+    #p "x=#{x};y=#{y}"
     if @wq_sz[x] > @wq_sz[y]
       @wq[y] = x
       @wq_sz[x] = @wq_sz[y] + @wq_sz[x]
@@ -24,7 +24,7 @@ class WeightedQuickUnion
   
   def root(a)
     while !is_root?(a)
-      puts "a=>#{a}, #{is_root?(a)}"
+      #puts "a=>#{a}, #{is_root?(a)}"
       a = parent_node(a)      
     end
     return a
@@ -59,3 +59,18 @@ puts "union(7,2) - #{wq.union(7,2)} - #{wq.state}"
 puts "union(6,1) - #{wq.union(6,1)} - #{wq.state}"
 puts "union(7,3) - #{wq.union(7,3)} - #{wq.state}"
 puts "connected(2,5) => #{wq.is_connected?(2,5)}"
+
+
+ew = WeightedQuickUnion.new(10)
+puts "exercise 6-2 5-7 4-0 0-8 9-6 7-6 3-1 8-1 1-2 "
+puts "#{ew.union(6,2)} - #{ew.state}"
+puts "#{ew.union(5,7)} - #{ew.state}"
+puts "#{ew.union(4,0)} - #{ew.state}"
+puts "#{ew.union(0,8)} - #{ew.state}"
+puts "#{ew.union(9,6)} - #{ew.state}"
+puts "#{ew.union(7,6)} - #{ew.state}"
+puts "#{ew.union(3,1)} - #{ew.state}"
+puts "#{ew.union(8,1)} - #{ew.state}"
+puts "#{ew.union(1,2)} - #{ew.state}"
+puts "current state is #{ew.state}"
+

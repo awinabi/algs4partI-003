@@ -41,11 +41,11 @@ puts "connected(2,5) => #{qf.is_connected?(2,5)}"
 
 eqf = QuickFind.new(9)
 #5-9 7-0 5-0 9-3 4-3 1-0 
-puts "exercise 5-9 7-0 5-0 9-3 4-3 1-0"
-eqf.union(5,9)
-eqf.union(7,0)
-eqf.union(5,0)
-eqf.union(9,3)
-eqf.union(4,3)
-eqf.union(1,0)
-qf.print_state()
+puts "exercise 6-4 0-8 7-8 6-2 0-1 3-9"
+eqf.union(6,4)
+eqf.union(0,8)
+eqf.union(7,8)
+eqf.union(6,2)
+eqf.union(0,1)
+eqf.union(3,9)
+eqf.print_state()

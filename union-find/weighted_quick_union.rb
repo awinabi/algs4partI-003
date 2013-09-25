@@ -1,19 +1,20 @@
 class WeightedQuickUnion
   def initialize(n)
     @wq = *(0..(n-1).to_i)
-    @wq_sz = Array.new(n){|x| 0 }
+    @wq_sz = Array.new(n){|x| 1 }
   end
 
   def union(a,b)
     x = root(a)
     y = root(b)
-    #p "x=#{x};y=#{y}"
-    if @wq_sz[x] > @wq_sz[y]
-      @wq[y] = x
-      @wq_sz[x] = @wq_sz[y] + @wq_sz[x]
-    else
-      @wq[x] = y
+    #p "x=#{x};y=#{y} --- #{@wq_sz}"
+
+    if @wq_sz[x] < @wq_sz[y]
+      @wq[x] = y 
       @wq_sz[y] = @wq_sz[y] + @wq_sz[x]
+    else
+      @wq[y] = x 
+      @wq_sz[x] = @wq_sz[y] + @wq_sz[x]
     end
     
   end
@@ -74,3 +75,16 @@ puts "#{ew.union(8,1)} - #{ew.state}"
 puts "#{ew.union(1,2)} - #{ew.state}"
 puts "current state is #{ew.state}"
 
+
+ew1 = WeightedQuickUnion.new(10)
+puts "exercise 2-3 9-5 6-4 5-7 6-1 9-0 8-7 4-3 7-1 "
+puts "#{ew1.union(2,3)} - #{ew1.state}"
+puts "#{ew1.union(9,5)} - #{ew1.state}"
+puts "#{ew1.union(6,4)} - #{ew1.state}"
+puts "#{ew1.union(5,7)} - #{ew1.state}"
+puts "#{ew1.union(6,1)} - #{ew1.state}"
+puts "#{ew1.union(9,0)} - #{ew1.state}"
+puts "#{ew1.union(8,7)} - #{ew1.state}"
+puts "#{ew1.union(4,3)} - #{ew1.state}"
+puts "#{ew1.union(7,1)} - #{ew1.state}"
+puts "current state is #{ew1.state}"

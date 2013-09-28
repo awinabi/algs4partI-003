@@ -4,9 +4,10 @@ class BrainfsckInterpreter
     @data_ary = []
     @instructions = []
     @current_index = 0
+    @inst_index = 0
   end
 
-  def operate(operand)
+  def operate(operand, instruction_idex)
     case operand
     when '>'
       @current_index += 1
@@ -24,13 +25,18 @@ class BrainfsckInterpreter
       @data_ary[@current_index] -= 1
     when '.'
       print @data_ary[@current_index]
+      print " "
     when '['
       if @data_ary[@current_index] == 0
-        @current_index = matching_bracket_index('[')
+        @inst_index = matching_bracket_index('[', instruction_idex)
+      else
+        @inst_index += 1
       end
     when ']'
       if @data_ary[@current_index] != 0
-        @current_index = matching_bracket_index(']')
+        @inst_index = matching_bracket_index(']', instruction_idex)
+      else
+        @inst_index += 1
       end
     else
       # do nothing
@@ -39,9 +45,17 @@ class BrainfsckInterpreter
 
 
   def process
-    @instructions.each do |c| 
-      p "#{@data_ary} - #{@current_index}"
-      operate(c)
+    @instructions.each_index do |i|
+      puts "inst index => #{@inst_index} = #{@instructions[@inst_index]} ~ #{@data_ary}"
+
+      if @inst_index != i
+        operate(@instructions[@inst_index], @inst_index)
+      else
+        operate(@instructions[i], i)
+      end
+
+      
+
     end
   end
 
@@ -61,20 +75,20 @@ class BrainfsckInterpreter
   end
 
   private
-  def matching_bracket_index(bracket)
+  def matching_bracket_index(bracket, i)
     p "#{@instructions}"
     case bracket
     when '['
-      i = @current_index + 1
       while @instructions[i] != ']'
         i = i + 1
       end
       return i
     when ']'
-      i = @current_index - 1
+      puts "i => #{i}"
       while @instructions[i] != '['
         i = i - 1
       end
+      puts "i => #{i}"
       return i
     else
       #do nothing
@@ -83,6 +97,7 @@ class BrainfsckInterpreter
 end
 
 bfi = BrainfsckInterpreter.new
-bfi.instruction = "+++++[>+++++[>++++<-]<-]>>+++.--..++++++."
+bfi.instruction = "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."
 # bfi.data = [103,101,101,107]
 bfi.process
+

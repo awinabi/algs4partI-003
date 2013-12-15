@@ -3,38 +3,43 @@ class BrainfsckInterpreter
   def initialize
     @data_ary = []
     @instructions = []
-    @current_index = 0
+    @out = []
+    @data_index = 0
     @inst_index = 0
   end
 
   def operate(operand, instruction_idex)
     case operand
     when '>'
-      @current_index += 1
+      @data_index = @data_index + 1
+      @inst_index += 1
     when '<'
-      @current_index -= 1
+      @data_index = @data_index - 1
+      @inst_index += 1
     when '+'
-      if @data_ary[@current_index].nil?
-        @data_ary[@current_index] = 0
+      if @data_ary[@data_index].nil?
+        @data_ary[@data_index] = 0
       end
-      @data_ary[@current_index] += 1
+      @data_ary[@data_index] += 1
+      @inst_index += 1
     when '-'
-      if @data_ary[@current_index].nil?
-        @data_ary[@current_index] = 0
+      if @data_ary[@data_index].nil?
+        @data_ary[@data_index] = 0
       end
-      @data_ary[@current_index] -= 1
+      @data_ary[@data_index] -= 1
+      @inst_index += 1
     when '.'
-      print @data_ary[@current_index]
-      print " "
+      @out << @data_ary[@data_index]
+      @inst_index += 1
     when '['
-      if @data_ary[@current_index] == 0
-        @inst_index = matching_bracket_index('[', instruction_idex)
+      if @data_ary[@data_index] == 0
+        @inst_index = matching_closing_bracket(instruction_idex)
       else
         @inst_index += 1
       end
     when ']'
-      if @data_ary[@current_index] != 0
-        @inst_index = matching_bracket_index(']', instruction_idex)
+      if @data_ary[@data_index] != 0
+        @inst_index = matching_opening_bracket(instruction_idex)
       else
         @inst_index += 1
       end
@@ -45,17 +50,9 @@ class BrainfsckInterpreter
 
 
   def process
-    @instructions.each_index do |i|
-      puts "inst index => #{@inst_index} = #{@instructions[@inst_index]} ~ #{@data_ary}"
-
-      if @inst_index != i
-        operate(@instructions[@inst_index], @inst_index)
-      else
-        operate(@instructions[i], i)
-      end
-
-      
-
+    while @inst_index < @instructions.length do
+      puts "inst index => #{@inst_index} / #{@instructions[@inst_index]} / #{@data_ary}"
+      operate(@instructions[@inst_index], @inst_index)
     end
   end
 
@@ -68,36 +65,57 @@ class BrainfsckInterpreter
   end
 
   def output
-    @data_ary.each do |c|
+    @out.each do |c|
       print c.chr
     end
-    puts
   end
 
-  private
-  def matching_bracket_index(bracket, i)
-    p "#{@instructions}"
-    case bracket
-    when '['
-      while @instructions[i] != ']'
-        i = i + 1
+  def matching_closing_bracket(i)
+    mcount = 1
+    k = i+1
+    while(mcount != 0) do
+      puts "k #{k} #{@instructions[k]}"
+      puts "mcount #{mcount}"
+      case @instructions[k]
+      when '['
+        mcount = mcount+1
+      when ']'
+        mcount = mcount-1
+      else
       end
-      return i
-    when ']'
-      puts "i => #{i}"
-      while @instructions[i] != '['
-        i = i - 1
-      end
-      puts "i => #{i}"
-      return i
-    else
-      #do nothing
+      k = k+1
     end
+    return k-1
   end
+
+  def matching_opening_bracket(i)
+    mcount = 1
+    k = i-1
+    while(mcount != 0) do
+      puts "k #{k} #{@instructions[k]}"
+      puts "mcount #{mcount}"
+      case @instructions[k]
+      when ']'
+        mcount = mcount+1
+      when '['
+        mcount = mcount-1
+      else
+      end
+      k = k-1
+    end
+    return k+1
+  end
+
 end
 
 bfi = BrainfsckInterpreter.new
 bfi.instruction = "++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."
-# bfi.data = [103,101,101,107]
+# bfi.instruction = "+++++[>+++++[>++++<-]<-]>>+++.--..++++++."
 bfi.process
+puts "---------------------------------------------"
+bfi.output
+# bfi.data = [103,101,101,107]
+# puts "matching ] bracket #{bfi.matching_closing_bracket(10)}"
+# puts "matching [ bracket #{bfi.matching_opening_bracket(33)}"
+
 
